@@ -1,0 +1,11 @@
+name: mock_model
+display_name: "Mock Model (Pipeline Testing)"
+hf_model_id: "mock"
+local_path: ""
+dtype: "float32"
+device_map: "cpu"
+load_in_4bit: false
+load_in_8bit: false
+supports_text_only: true
+processor_kwargs: {}
+generate_kwargs: {}

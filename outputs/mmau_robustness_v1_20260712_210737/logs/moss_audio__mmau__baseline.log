@@ -1,0 +1,49 @@
+2026-07-13 06:01:26 | INFO     | === Task start: moss_audio__mmau__baseline ===
+2026-07-13 06:01:26 | INFO     | Model: moss_audio, Benchmark: mmau, Perturbation: baseline, Samples: 1000, Batch size: 24
+2026-07-13 06:01:39 | INFO     | Sorted 1000 samples by audio duration (range: 2.0s – 34.5s)
+2026-07-13 06:01:39 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 06:07:39 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 06:15:33 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 06:24:33 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 06:31:27 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 06:39:07 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 06:46:07 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 06:53:43 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 07:01:25 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 07:08:44 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 07:15:56 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 07:24:24 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 07:34:02 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 07:41:44 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 07:49:20 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 07:56:22 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 08:04:08 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 08:09:32 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 08:15:35 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 08:22:59 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 08:29:17 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 08:35:27 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 08:42:32 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 08:50:05 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 08:57:12 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 09:04:36 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 09:11:25 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 09:17:28 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 09:24:11 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 09:30:45 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 09:36:06 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 09:44:45 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 09:51:08 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 09:58:50 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 10:06:24 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 10:12:44 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 10:20:28 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 10:28:36 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 10:37:41 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 10:44:32 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 10:51:36 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 11:00:40 | ERROR    | Batch inference failed (16 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 16
+2026-07-13 11:08:02 | INFO     | === Task complete: moss_audio__mmau__baseline ===
+2026-07-13 11:08:02 | INFO     | Accuracy: 0.4390 (439/1000, errors: 0)
+2026-07-13 11:08:02 | INFO     | Duration: 18395.2s (1000 new + 0 resumed) | Throughput: 0.05 samples/s
+2026-07-13 11:08:02 | INFO     | Breakdown — Perturbation: 0.0s | Inference: 5.5s | Overhead: 18389.8s

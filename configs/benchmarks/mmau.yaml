@@ -1,0 +1,13 @@
+name: mmau
+display_name: "MMAU"
+hf_dataset: "lmms-lab/mmau"
+split: "test_mini"
+max_samples: null
+audio_field: "audio"
+audio_root: null
+category_fields:
+  - "dataset"
+  - "task"
+  - "category"
+  - "sub_category"
+  - "difficulty"

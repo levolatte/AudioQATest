@@ -1,0 +1,7 @@
+2026-07-12 18:26:54 | INFO     | === Task start: mock_model__mmau__baseline ===
+2026-07-12 18:26:54 | INFO     | Model: mock_model, Benchmark: mmau, Perturbation: baseline, Samples: 1000, Batch size: 12
+2026-07-12 18:27:06 | INFO     | Sorted 1000 samples by audio duration (range: 2.0s – 34.5s)
+2026-07-12 18:27:06 | INFO     | === Task complete: mock_model__mmau__baseline ===
+2026-07-12 18:27:06 | INFO     | Accuracy: 0.3770 (377/1000, errors: 0)
+2026-07-12 18:27:06 | INFO     | Duration: 11.4s (1000 new + 0 resumed) | Throughput: 87.58 samples/s
+2026-07-12 18:27:06 | INFO     | Breakdown — Perturbation: 0.0s | Inference: 0.0s | Overhead: 11.4s

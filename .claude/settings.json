@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python3 -c ' *)",
+      "Bash(python -m json.tool)",
+      "Read(//home/lt/miniconda3/envs/**)",
+      "Read(//home/lt/miniconda3/envs/audioqa/**)",
+      "Bash(ls ~/.cache/huggingface/hub/ 2>/dev/null | grep -iE \"moss|qwen|kimi\" | head -10)",
+      "Read(//home/lt/.cache/huggingface/hub/**)",
+      "Bash(python3 -c \"import transformers; print\\(transformers.__version__\\)\")",
+      "Bash(python3 -c \"import torch; print\\(torch.__version__\\)\")",
+      "Bash(python3 -c \"import torchaudio; print\\(torchaudio.__version__\\)\")",
+      "Bash(conda info *)",
+      "Read(//home/lt/anaconda3/**)",
+      "Bash(nvidia-smi --query-gpu=memory.total,memory.used,memory.free --format=csv,noheader)",
+      "Bash(rm -rf /home/lt/projects/audioQAagent/outputs/test_arrow /home/lt/projects/audioQAagent/outputs/test_fixes /home/lt/projects/audioQAagent/outputs/test_fixes2 /home/lt/projects/audioQAagent/outputs/test_fixes3 /home/lt/projects/audioQAagent/outputs/test_fixes4)"
+    ],
+    "additionalDirectories": [
+      "/home/lt/projects/audioQAagent/outputs/test_arrow"
+    ]
+  }
+}

@@ -1,0 +1,23 @@
+seed: 42
+output_base_dir: "outputs"
+
+# HuggingFace endpoint — set to a mirror if huggingface.co is unreachable.
+# Common mirrors: https://hf-mirror.com, https://hf.xeduapi.com
+# Leave empty to use the default (huggingface.co).
+hf_endpoint: "https://hf-mirror.com"
+
+# HuggingFace token — required for gated models (Qwen2.5-Omni-7B, etc.)
+# and gives higher download rate limits.
+# ⚠️  DO NOT hardcode tokens here. Set via HF_TOKEN environment variable instead:
+#    export HF_TOKEN="hf_xxxxx"
+hf_token: ""
+
+runtime:
+  device: "cuda:0"
+  batch_size: 24
+  max_new_tokens: 64
+  do_sample: false
+  num_beams: 1
+  save_predictions: true
+  resume: true
+  log_level: "INFO"

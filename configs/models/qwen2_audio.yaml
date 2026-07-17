@@ -1,0 +1,15 @@
+name: qwen2_audio
+display_name: "Qwen2-Audio-7B-Instruct"
+hf_model_id: "Qwen/Qwen2-Audio-7B-Instruct"
+local_path: ""
+dtype: "bfloat16"
+device_map: "auto"
+load_in_4bit: false
+load_in_8bit: false
+supports_text_only: false
+processor_kwargs:
+  trust_remote_code: true
+generate_kwargs:
+  max_new_tokens: 64
+  do_sample: false
+  num_beams: 1

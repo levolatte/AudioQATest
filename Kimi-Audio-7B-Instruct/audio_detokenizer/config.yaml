@@ -1,0 +1,123 @@
+accumulate_grad_batches: 1
+base_config: config/config_base.yaml
+batch_max_tokens: 12000
+batch_size: 2
+cfg_init: 1.0
+cfg_scale: 4.0
+cfg_schedule: linear
+check_val_every_n_epoch: 10
+clip_grad_norm: 0
+data_dir: ''
+debug: false
+deep_speed_strategy_stage: 2
+drop_last: true
+dynamic_cfg: false
+endless_ds: false
+filter_args:
+  lang:
+  - zh
+  - en
+  max_spk_num: 6
+  speech_ratio: 0.6
+gradient_clip_val: 1.0
+indexed_ds: true
+infer: false
+infer_exp_name: ''
+infer_json_path: ''
+inference_ckpt: ''
+inference_mode: nonstreaming
+learning_rate: 1e-4
+limit_val_batches: 100
+load_opt: false
+log_interval: 10
+logger_type: tensorboard
+loss:
+  lambda_fm: 1.0
+  lambda_phone: 0.0
+  mel_loss: l1
+max_epochs: 1000
+max_eval_sentences: -1
+max_eval_tokens: -1
+max_prompt_ratio: 0.5
+max_segment_cnt: 20000
+max_sentences: -1
+max_speech_duration: 20
+max_tokens: 31250
+max_training_steps: 100000
+max_updates: 160000
+mel_mean: -4.479605
+mel_std: 3.4584913
+meta_dir: null
+min_prompt_duration: 0.5
+min_speech_duration: -1
+model:
+  condition_prenet_depth: 6
+  dit:
+    chunk_params:
+      hz: 50
+      max_chunk: 3.0
+      max_chunk_history: 50000000
+      min_chunk: 0.5
+      need_block_shift: false
+    condition_input_dim: 1280
+    condition_type: discrete_codes
+    depth: 16
+    ffn_act_layer: gleu_tanh
+    ffn_conv_kernel_size: 5
+    ffn_gated_glu: false
+    ffn_type: vanilla_mlp
+    hidden_size: 2304
+    input_size: 80
+    max_seq_len: 4096
+    mlp_ratio: 4.0
+    num_heads: 18
+    position_embedding_type: skip
+    prompt_cfg_dropout: 0.2
+    rope_params:
+      max_position_embeddings: 4096
+      rope_base: 10000.0
+      rope_interpolation_factor: 1.0
+    semantic_cfg_dropout: 0.2
+    semantic_vocab_size: 16384
+    use_chunk_setting: true
+    use_rope: true
+  phone_predictor:
+    blank_id: 4
+    phone_vocab_size: 5000
+  position_id_start_from: 0
+  random_position_start: true
+  restart_position_ids: false
+  use_condition_prenet: false
+need_merge_same_speaker: true
+need_precise_phones: false
+no_verlap: true
+normalize_mel: true
+num_nodes: 1
+num_sanity_val_steps: 0
+num_workers: 1
+ode_steps: 150
+optimizer_adam_beta1: 0.9
+optimizer_adam_beta2: 0.98
+optimizer_class: adamw
+pin_memory: true
+precision: bf16-mixed
+save_interval: 2000
+save_topk: 10
+seed: 1234
+shuffle: true
+sort_by_len: true
+src_sample_rate: 16000
+strategy: ddp
+tensorboard_dir: tb_logs
+test_num: 100
+tgt_sample_rate: 24000
+timescale: 80000
+use_cfg: false
+use_cfg_rescale: false
+use_distributed_sampler: false
+use_uncondition: false
+val_check_interval: 2000000
+vocoder_ckpt: ''
+wandb_name: glm4_semantic_cfm_v2_debug
+warmup_updates: 100
+weight_decay: 0.0001

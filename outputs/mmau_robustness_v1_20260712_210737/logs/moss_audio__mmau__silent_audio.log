@@ -1,0 +1,7 @@
+2026-07-13 11:08:02 | INFO     | === Task start: moss_audio__mmau__silent_audio ===
+2026-07-13 11:08:02 | INFO     | Model: moss_audio, Benchmark: mmau, Perturbation: silent_audio, Samples: 1000, Batch size: 24
+2026-07-13 11:08:02 | INFO     | Sorted 1000 samples by audio duration (range: 2.0s – 34.5s)
+2026-07-13 11:08:02 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 11:13:03 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 11:21:09 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24
+2026-07-13 11:29:18 | ERROR    | Batch inference failed (24 samples): MOSS-Audio batch inference failed: Expected text batch size 1, got 24

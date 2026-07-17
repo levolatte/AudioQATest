@@ -1,0 +1,7 @@
+2026-07-12 21:42:56 | INFO     | === Task start: qwen_omni__mmau__silent_audio ===
+2026-07-12 21:42:56 | INFO     | Model: qwen_omni, Benchmark: mmau, Perturbation: silent_audio, Samples: 1000, Batch size: 24
+2026-07-12 21:42:56 | INFO     | Sorted 1000 samples by audio duration (range: 2.0s – 34.5s)
+2026-07-12 22:15:30 | INFO     | === Task complete: qwen_omni__mmau__silent_audio ===
+2026-07-12 22:15:30 | INFO     | Accuracy: 0.5350 (535/1000, errors: 0)
+2026-07-12 22:15:30 | INFO     | Duration: 1953.8s (1000 new + 0 resumed) | Throughput: 0.51 samples/s
+2026-07-12 22:15:30 | INFO     | Breakdown — Perturbation: 4.5s | Inference: 1949.2s | Overhead: 0.1s

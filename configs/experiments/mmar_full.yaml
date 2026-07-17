@@ -1,0 +1,27 @@
+experiment:
+  name: "mmar_robustness_v1"
+  description: "Full robustness evaluation on MMAR test"
+
+seed: 42
+output_dir: "outputs"
+
+models:
+  - qwen_omni
+  - qwen2_audio
+  - moss_audio_8b
+  - kimi_audio
+
+benchmarks:
+  - mmar
+
+perturbations:
+  - baseline
+  - silent_audio
+  - noise_audio
+  - shuffled_choices
+  - label_only
+
+runtime:
+  device: "cuda:0"
+  resume: true
+  log_level: "INFO"

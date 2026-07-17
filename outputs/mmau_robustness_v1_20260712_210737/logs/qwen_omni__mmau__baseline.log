@@ -1,0 +1,7 @@
+2026-07-12 21:08:25 | INFO     | === Task start: qwen_omni__mmau__baseline ===
+2026-07-12 21:08:25 | INFO     | Model: qwen_omni, Benchmark: mmau, Perturbation: baseline, Samples: 1000, Batch size: 24
+2026-07-12 21:08:35 | INFO     | Sorted 1000 samples by audio duration (range: 2.0s – 34.5s)
+2026-07-12 21:42:56 | INFO     | === Task complete: qwen_omni__mmau__baseline ===
+2026-07-12 21:42:56 | INFO     | Accuracy: 0.6960 (696/1000, errors: 0)
+2026-07-12 21:42:56 | INFO     | Duration: 2071.1s (1000 new + 0 resumed) | Throughput: 0.48 samples/s
+2026-07-12 21:42:56 | INFO     | Breakdown — Perturbation: 0.0s | Inference: 2060.5s | Overhead: 10.6s

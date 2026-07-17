@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=77.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "audio-qa-robustness"
+version = "0.1.0"
+description = "Multi-model robustness evaluation for audio QA benchmarks"
+requires-python = ">=3.11"
+dependencies = [
+    "torch>=2.0.0",
+    "transformers>=4.40.0",
+    "accelerate>=0.30.0",
+    "tqdm>=4.65.0",
+    "datasets>=2.19.0",
+    "librosa>=0.10.0",
+    "soundfile>=0.12.0",
+    "pyyaml>=6.0",
+    "pydantic>=2.0.0",
+    "numpy>=1.26.0",
+]
+
+[project.optional-dependencies]
+mmau = ["datasets[audio]"]
+mmar = ["datasets[audio]"]
+dev = ["pytest>=7.0.0", "pytest-cov"]
+
+[project.scripts]
+run-experiment = "scripts.run_experiment:main"
+run-single = "scripts.run_single:main"
+aggregate = "scripts.aggregate:main"

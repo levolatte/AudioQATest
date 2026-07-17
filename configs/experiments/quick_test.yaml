@@ -1,0 +1,21 @@
+experiment:
+  name: "quick_test"
+  description: "Quick test: mock model, baseline+label_only, 5 samples from local fixture"
+
+seed: 42
+output_dir: "outputs"
+
+models:
+  - mock_model
+
+benchmarks:
+  - mmau
+
+perturbations:
+  - baseline
+  - label_only
+
+runtime:
+  device: "cpu"
+  resume: false
+  log_level: "DEBUG"

@@ -1,0 +1,15 @@
+name: moss_audio_8b
+display_name: "MOSS-Audio-8B-Instruct"
+hf_model_id: "OpenMOSS-Team/MOSS-Audio-8B-Instruct"
+local_path: ""
+dtype: "bfloat16"
+device_map: "auto"
+load_in_4bit: false
+load_in_8bit: false
+supports_text_only: false
+processor_kwargs:
+  trust_remote_code: true
+generate_kwargs:
+  max_new_tokens: 64
+  do_sample: false
+  num_beams: 1

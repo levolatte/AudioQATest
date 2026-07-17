@@ -1,0 +1,7 @@
+2026-07-12 22:15:30 | INFO     | === Task start: qwen_omni__mmau__noise_audio ===
+2026-07-12 22:15:30 | INFO     | Model: qwen_omni, Benchmark: mmau, Perturbation: noise_audio, Samples: 1000, Batch size: 24
+2026-07-12 22:15:30 | INFO     | Sorted 1000 samples by audio duration (range: 2.0s – 34.5s)
+2026-07-12 23:13:46 | INFO     | === Task complete: qwen_omni__mmau__noise_audio ===
+2026-07-12 23:13:46 | INFO     | Accuracy: 0.4870 (487/1000, errors: 0)
+2026-07-12 23:13:46 | INFO     | Duration: 3496.3s (1000 new + 0 resumed) | Throughput: 0.29 samples/s
+2026-07-12 23:13:46 | INFO     | Breakdown — Perturbation: 0.0s | Inference: 3496.1s | Overhead: 0.1s

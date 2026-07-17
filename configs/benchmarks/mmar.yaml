@@ -1,0 +1,13 @@
+name: mmar
+display_name: "MMAR"
+hf_dataset: "BoJack/MMAR"
+split: "test"
+max_samples: null
+audio_field: "audio_path"
+audio_root: null
+category_fields:
+  - "modality"
+  - "category"
+  - "sub_category"
+  - "language"
+  - "source"

@@ -1,0 +1,18 @@
+name: qwen_omni
+display_name: "Qwen2.5-Omni-7B"
+hf_model_id: "Qwen/Qwen2.5-Omni-7B"
+local_path: ""
+dtype: "bfloat16"
+device_map: "auto"
+load_in_4bit: false
+load_in_8bit: false
+supports_text_only: true
+processor_kwargs:
+  trust_remote_code: true
+  use_audio_in_video: false
+generate_kwargs:
+  max_new_tokens: 64
+  do_sample: false
+  num_beams: 1
+  use_audio_in_video: false
+  return_audio: false
