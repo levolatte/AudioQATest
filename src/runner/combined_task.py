@@ -24,6 +24,7 @@ from tqdm import tqdm
 from src.core.types import Sample, Prediction, ResultSet, PerturbationConfig
 from src.data.base import AbstractBenchmark
 from src.models.base import AbstractModel
+from src.models.utils import check_strict_match
 from src.perturbations.base import Perturbation
 from src.runner.logging_setup import get_task_logger
 
@@ -38,6 +39,7 @@ def _pred_to_dict(p: Prediction) -> dict:
         "chosen_answer": p.chosen_answer,
         "raw_output": p.raw_output,
         "correct": p.correct,
+        "strict_correct": p.strict_correct,
         "error": p.error,
         "metadata": _serialize_metadata(p.metadata),
         "perturbation": p.perturbation,
@@ -300,6 +302,10 @@ class CombinedEvaluationTask:
                 chosen_answer=chosen,
                 raw_output=raw,
                 correct=correct,
+                strict_correct=(
+                    check_strict_match(raw, sample.ground_truth, sample.choices)
+                    if not sample.metadata.get("label_only", False) else False
+                ),
                 error=None,
                 metadata=sample.metadata,
                 perturbation=pname,

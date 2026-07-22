@@ -13,6 +13,7 @@ from tqdm import tqdm
 from src.core.types import Sample, Prediction, ResultSet, PerturbationConfig, Sample
 from src.data.base import AbstractBenchmark
 from src.models.base import AbstractModel
+from src.models.utils import check_strict_match
 from src.perturbations.base import Perturbation
 from src.runner.logging_setup import get_task_logger
 
@@ -192,6 +193,8 @@ class EvaluationTask:
         logger.info(f"Accuracy: {result_set.accuracy:.4f} "
                     f"({result_set.correct_count}/{len(predictions)}, "
                     f"errors: {errors})")
+        logger.info(f"Strict accuracy: {result_set.strict_accuracy:.4f} "
+                    f"({result_set.strict_correct_count}/{len(predictions)})")
         logger.info(f"Duration: {elapsed:.1f}s ({n_new} new + {n_resumed} resumed) | "
                     f"Throughput: {overall_sps:.2f} samples/s")
         logger.info(f"Breakdown — Perturbation: {pert_time_total:.1f}s | "
@@ -242,6 +245,10 @@ class EvaluationTask:
             if batch_ok and j < len(batch_results):
                 chosen, raw = batch_results[j]
                 correct = (chosen == transformed.ground_truth)
+                strict_correct = (
+                    check_strict_match(raw, transformed.ground_truth, transformed.choices)
+                    if not transformed.metadata.get("label_only", False) else False
+                )
                 error_msg = None
             else:
                 # Fallback: sequential per-sample inference
@@ -251,12 +258,17 @@ class EvaluationTask:
                         label_only=transformed.metadata.get("label_only", False),
                     )
                     correct = (chosen == transformed.ground_truth)
+                    strict_correct = (
+                        check_strict_match(raw, transformed.ground_truth, transformed.choices)
+                        if not transformed.metadata.get("label_only", False) else False
+                    )
                     error_msg = None
                 except Exception as e2:
                     logger.error(f"Inference failed for {sample.id}: {e2}")
                     chosen = transformed.choices[0] if transformed.choices else ""
                     raw = f"[ERROR] {repr(e2)}"
                     correct = False
+                    strict_correct = False
                     error_msg = repr(e2)
                     torch.cuda.empty_cache()
 
@@ -268,6 +280,7 @@ class EvaluationTask:
                 chosen_answer=chosen,
                 raw_output=raw,
                 correct=correct,
+                strict_correct=strict_correct,
                 error=error_msg,
                 metadata=transformed.metadata,
                 perturbation=self.perturbation.name,
@@ -301,6 +314,7 @@ def _pred_to_dict(p: Prediction) -> dict:
         "chosen_answer": p.chosen_answer,
         "raw_output": p.raw_output,
         "correct": p.correct,
+        "strict_correct": p.strict_correct,
         "error": p.error,
         "metadata": _serialize_metadata(p.metadata),
         "perturbation": p.perturbation,

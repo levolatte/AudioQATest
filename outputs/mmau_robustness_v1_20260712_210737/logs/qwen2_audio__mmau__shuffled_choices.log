@@ -1,7 +1,0 @@
-2026-07-13 04:31:01 | INFO     | === Task start: qwen2_audio__mmau__shuffled_choices ===
-2026-07-13 04:31:01 | INFO     | Model: qwen2_audio, Benchmark: mmau, Perturbation: shuffled_choices, Samples: 1000, Batch size: 24
-2026-07-13 04:31:01 | INFO     | Sorted 1000 samples by audio duration (range: 2.0s – 34.5s)
-2026-07-13 05:54:41 | INFO     | === Task complete: qwen2_audio__mmau__shuffled_choices ===
-2026-07-13 05:54:41 | INFO     | Accuracy: 0.3850 (385/1000, errors: 0)
-2026-07-13 05:54:41 | INFO     | Duration: 5019.4s (1000 new + 0 resumed) | Throughput: 0.20 samples/s
-2026-07-13 05:54:41 | INFO     | Breakdown — Perturbation: 0.0s | Inference: 5019.3s | Overhead: 0.1s

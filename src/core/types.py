@@ -38,6 +38,7 @@ class Prediction:
     chosen_answer: str
     raw_output: str
     correct: bool
+    strict_correct: bool = False
     error: Optional[str] = None
     metadata: dict[str, Any] = field(default_factory=dict)
     perturbation: str = ""
@@ -67,8 +68,18 @@ class ResultSet:
         return sum(1 for p in self.predictions if p.correct) / self.total
 
     @property
+    def strict_accuracy(self) -> float:
+        if self.total == 0:
+            return 0.0
+        return sum(1 for p in self.predictions if p.strict_correct) / self.total
+
+    @property
     def correct_count(self) -> int:
         return sum(1 for p in self.predictions if p.correct)
+
+    @property
+    def strict_correct_count(self) -> int:
+        return sum(1 for p in self.predictions if p.strict_correct)
 
 
 # ---------------------------------------------------------------------------

@@ -6,6 +6,8 @@ Uses Qwen2AudioForConditionalGeneration. Handles audio path and tensor input.
 import os
 from typing import Tuple
 
+import librosa
+import numpy as np
 import torch
 
 from src.core.registry import register_model
@@ -72,34 +74,68 @@ class Qwen2AudioModel(AbstractModel):
         except Exception as e:
             raise ModelLoadError(f"Failed to load Qwen2-Audio: {e}") from e
 
+    def _decode_audio(self, audio) -> np.ndarray:
+        """Decode audio input to a 1-D float32 numpy array at the
+        processor's expected sampling rate.  Accepts file paths and
+        torch tensors; rejects everything else.
+        """
+        if isinstance(audio, torch.Tensor):
+            arr = audio.cpu().numpy()
+        elif isinstance(audio, str):
+            if not os.path.exists(audio):
+                raise FileNotFoundError(f"Audio file not found: {audio}")
+            sr = self._processor.feature_extractor.sampling_rate
+            arr, _ = librosa.load(audio, sr=sr, mono=True)
+        else:
+            raise TypeError(
+                f"Unsupported audio type: {type(audio).__name__}. "
+                f"Expected str (path) or torch.Tensor (waveform)."
+            )
+
+        # --- Normalise to 1-D float32 -------------------------------------
+        if arr.ndim != 1:
+            arr = arr.squeeze()
+        if arr.ndim != 1:
+            raise ValueError(
+                f"Audio waveform must be 1-D after squeeze, got shape {arr.shape}"
+            )
+        if arr.dtype != np.float32:
+            arr = arr.astype(np.float32)
+
+        if len(arr) == 0:
+            raise ValueError("Decoded audio waveform is empty")
+        if not np.isfinite(arr).all():
+            raise ValueError("Audio waveform contains NaN or Inf values")
+
+        return arr
+
     def infer(self, audio, question: str, choices: list[str],
               label_only: bool = False) -> Tuple[str, str]:
         if self._model is None:
             raise RuntimeError("Model not loaded. Call load() first.")
 
-        _cleanup_temp = False
-        audio_path = audio
-
         try:
-            if isinstance(audio, torch.Tensor):
-                audio_path = self._tensor_to_tempfile(audio)
-                _cleanup_temp = True
+            # --- Validate & decode audio ------------------------------------
+            if audio is None:
+                raise ValueError(
+                    "Qwen2-Audio requires audio input (supports_text_only=False), got None"
+                )
 
+            waveform = self._decode_audio(audio)
+
+            # --- Build messages and tokenize --------------------------------
             prompt = build_question_prompt(question, choices, label_only=label_only)
 
-            # Qwen2-Audio uses a conversations format
+            audio_url = audio if isinstance(audio, str) else "audio.wav"
             messages = [
                 {
                     "role": "user",
                     "content": [
-                        {"type": "audio", "audio_url": audio_path} if audio_path else {},
+                        {"type": "audio", "audio_url": audio_url},
                         {"type": "text", "text": prompt},
                     ],
                 }
             ]
-
-            # Filter empty content blocks
-            messages[0]["content"] = [c for c in messages[0]["content"] if c]
 
             text = self._processor.apply_chat_template(
                 messages,
@@ -107,11 +143,32 @@ class Qwen2AudioModel(AbstractModel):
                 add_generation_prompt=True,
             )
 
+            # Official Qwen2-Audio processor signature (transformers 5.x):
+            #   __call__(text=..., audio=np.ndarray|list[np.ndarray]=None)
+            # audio= receives flat list of 1-D float32 numpy arrays
+            # decoded at the feature extractor's sampling rate.
             inputs = self._processor(
                 text=text,
-                audios=[audio_path] if audio_path and isinstance(audio_path, str) else None,
+                audio=[waveform],
+                sampling_rate=self._processor.feature_extractor.sampling_rate,
                 return_tensors="pt",
+                padding=True,
             )
+
+            # --- Post-processor assertions ----------------------------------
+            required = {"input_ids", "attention_mask", "input_features"}
+            missing = required - set(inputs.keys())
+            if missing:
+                raise RuntimeError(
+                    f"Missing model inputs after processor: {sorted(missing)}"
+                )
+
+            features = inputs["input_features"]
+            if features.numel() == 0:
+                raise RuntimeError("input_features is empty after processor")
+            if not torch.isfinite(features).all():
+                raise RuntimeError("input_features contains NaN or Inf values")
+
             inputs = inputs.to(self._model.device)
 
             with torch.no_grad():
@@ -133,58 +190,75 @@ class Qwen2AudioModel(AbstractModel):
         except Exception as e:
             raise ModelInferenceError(f"Qwen2-Audio inference failed: {e}") from e
 
-        finally:
-            # Cleanup temp file — always runs, even on exception
-            if _cleanup_temp and isinstance(audio_path, str):
-                try:
-                    os.unlink(audio_path)
-                except OSError:
-                    pass
-
     def infer_batch(self, batch: list[tuple]) -> list[tuple[str, str]]:
-        """Batch inference for Qwen2-Audio."""
+        """Batch inference for Qwen2-Audio.
+
+        Official API: every audio is decoded to a 1-D float32 numpy
+        array, then passed as a *flat* list to ``audios=``.
+        """
         if self._model is None:
             raise RuntimeError("Model not loaded. Call load() first.")
 
         all_texts: list[str] = []
-        all_audios: list[list[str]] = []
+        all_waveforms: list[np.ndarray] = []
         all_choices: list[list[str]] = []
-        cleanup_items: list[tuple[bool, str]] = []
 
         for audio, question, choices, label_only in batch:
+            if audio is None:
+                raise ValueError(
+                    "Qwen2-Audio requires audio input (supports_text_only=False), got None"
+                )
+
             prompt = build_question_prompt(question, choices, label_only=label_only)
+            waveform = self._decode_audio(audio)
 
-            _cleanup = False
-            audio_path = audio
-            if isinstance(audio, torch.Tensor):
-                audio_path = self._tensor_to_tempfile(audio)
-                _cleanup = True
-
+            audio_url = audio if isinstance(audio, str) else "audio.wav"
             messages = [
                 {"role": "user", "content": [
-                    {"type": "audio", "audio_url": audio_path} if audio_path else {},
+                    {"type": "audio", "audio_url": audio_url},
                     {"type": "text", "text": prompt},
                 ]},
             ]
-            messages[0]["content"] = [c for c in messages[0]["content"] if c]
 
             text = self._processor.apply_chat_template(
                 messages, tokenize=False, add_generation_prompt=True,
             )
 
             all_texts.append(text)
-            all_audios.append([audio_path] if audio_path and isinstance(audio_path, str) else [])
+            all_waveforms.append(waveform)
             all_choices.append(choices)
-            cleanup_items.append((_cleanup, audio_path if _cleanup else None))
+
+        # --- Safety assertion ------------------------------------------------
+        if len(all_texts) != len(all_waveforms):
+            raise RuntimeError(
+                f"Text/waveform count mismatch: "
+                f"{len(all_texts)} vs {len(all_waveforms)}"
+            )
 
         try:
-            has_audio = any(len(a) > 0 for a in all_audios)
+            # Official Qwen2-Audio processor: flat list of 1-D float32 numpy arrays
             inputs = self._processor(
                 text=all_texts,
-                audios=all_audios if has_audio else None,
+                audio=all_waveforms,
+                sampling_rate=self._processor.feature_extractor.sampling_rate,
                 padding=True,
                 return_tensors="pt",
             )
+
+            # --- Post-processor assertions ----------------------------------
+            required = {"input_ids", "attention_mask", "input_features"}
+            missing = required - set(inputs.keys())
+            if missing:
+                raise RuntimeError(
+                    f"Missing model inputs after processor: {sorted(missing)}"
+                )
+
+            features = inputs["input_features"]
+            if features.numel() == 0:
+                raise RuntimeError("input_features is empty after processor")
+            if not torch.isfinite(features).all():
+                raise RuntimeError("input_features contains NaN or Inf values")
+
             inputs = inputs.to(self._model.device)
 
             with torch.no_grad():
@@ -206,13 +280,6 @@ class Qwen2AudioModel(AbstractModel):
 
         except Exception as e:
             raise ModelInferenceError(f"Qwen2-Audio batch inference failed: {e}") from e
-        finally:
-            for _cleanup, path in cleanup_items:
-                if _cleanup and path is not None:
-                    try:
-                        os.unlink(path)
-                    except OSError:
-                        pass
 
     def unload(self) -> None:
         if self._model is not None:

@@ -1,7 +1,0 @@
-2026-07-13 11:37:10 | INFO     | === Task start: moss_audio__mmau__baseline ===
-2026-07-13 11:37:10 | INFO     | Model: moss_audio, Benchmark: mmau, Perturbation: baseline, Samples: 4, Batch size: 4
-2026-07-13 11:37:10 | INFO     | Sorted 4 samples by audio duration (range: 10.0s – 10.0s)
-2026-07-13 11:39:28 | INFO     | === Task complete: moss_audio__mmau__baseline ===
-2026-07-13 11:39:28 | INFO     | Accuracy: 1.0000 (4/4, errors: 0)
-2026-07-13 11:39:28 | INFO     | Duration: 137.6s (4 new + 0 resumed) | Throughput: 0.03 samples/s
-2026-07-13 11:39:28 | INFO     | Breakdown — Perturbation: 0.0s | Inference: 137.4s | Overhead: 0.3s

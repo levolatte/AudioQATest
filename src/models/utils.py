@@ -18,61 +18,51 @@ def build_question_prompt(question: str, choices: list[str],
                           label_only: bool = False) -> str:
     """Build a multiple-choice prompt from question and choices.
 
+    All models use this same prompt format. Choices are presented with letter
+    prefixes (A/B/C/D).
+
     Args:
         question: The question text.
         choices: List of option strings.
-        label_only: If True, prompt the model to output ONLY the option label
-                    (e.g. "A") without any explanation. Choices are presented
-                    with letter prefixes (A/B/C/D).
-                    If False, prompt the model to output the full answer with
-                    explanation inside <answer> tags.
+        label_only: If True, prompt the model to output ONLY the option letter
+                    (e.g. "A") without any explanation.
+                    If False, prompt the model to output the letter AND the
+                    option text together (e.g. "A. Man").
     """
     labels = ["A", "B", "C", "D", "E", "F"][:len(choices)]
+    labeled_options = [f"{labels[i]}. {choices[i]}" for i in range(len(choices))]
 
     if label_only:
-        # Label-only mode: letter-prefixed options, output ONLY the letter
-        labeled_options = [f"{labels[i]}. {choices[i]}" for i in range(len(choices))]
         return (
-            f"{question}\n"
+            "Listen to the audio carefully and answer the question.\n\n"
+            f"{question}\n\n"
             + "\n".join(labeled_options) +
-            f"\n\nOutput ONLY the letter of the correct choice "
-            f"(e.g. A, B, C, or D). Do NOT include any explanation or the "
-            f"option text.\n\nAnswer:"
+            "\n\nChoose the correct answer. Reply with the letter only."
         )
 
-    # Standard mode: plain option list, output with <answer> tags
-    options_str = [str(c) for c in choices]
-    labeled_options = [f"{labels[i]}. {choices[i]}" for i in range(len(choices))]
     return (
-        f"{question}\n"
+        "Listen to the audio carefully and answer the question.\n\n"
+        f"{question}\n\n"
         + "\n".join(labeled_options) +
-        f"\n\nPlease choose the answer from the following options: "
-        f"{options_str}. "
-        f"Output the final answer in <answer> </answer>."
+        "\n\nChoose the correct answer. Reply with the letter and the corresponding option text."
     )
 
 
 def clean_answer(pred, choices: list[str]) -> str:
     """Extract the chosen answer from raw model output.
 
-    Multi-level fallback strategy (from infer.py):
-    1. Parse <answer>...</answer> tags
-    2. Clean special tokens
-    3. Exact match against option text
-    4. Letter fallback (A/B/C/D)
-    5. Contains match (option text in output)
-    6. Reverse contains match (output in option text)
-    7. Default to first choice
+    Multi-level fallback strategy:
+    1. Clean special tokens
+    2. Exact match against option text
+    3. Letter fallback (A/B/C/D)
+    4. Contains match (option text in output)
+    5. Reverse contains match (output in option text)
+    6. Default to first choice
     """
     if pred is None or len(choices) == 0:
         return choices[0] if choices else ""
 
     raw = str(pred).strip()
-
-    # Priority: parse <answer>...</answer>
-    m = re.search(r"<answer>(.*?)</answer>", raw, flags=re.I | re.S)
-    if m:
-        raw = m.group(1).strip()
 
     raw = raw.replace("<|im_end|>", "").replace("<|endoftext|>", "").strip()
     raw = raw.strip("\"'""").strip()
@@ -111,3 +101,34 @@ def clean_answer(pred, choices: list[str]) -> str:
             return c
 
     return choices[0]
+
+
+def check_strict_match(raw: str, ground_truth: str, choices: list[str]) -> bool:
+    """Check if raw output is in strict ``letter. text`` format AND correct.
+
+    A strict match requires:
+    1. The output begins with a valid letter (A/B/C/D/...), period, and space
+    2. The text after matches the option text at that letter index
+    3. The resolved choice equals the ground truth
+
+    Returns True only when all three conditions are met.
+    """
+    if not raw or not choices:
+        return False
+
+    labels = ["A", "B", "C", "D", "E", "F"]
+    m = re.match(r"^([A-F])\.\s+(.+)", str(raw).strip())
+    if not m:
+        return False
+
+    letter = m.group(1)
+    text = m.group(2).strip()
+
+    idx = labels.index(letter) if letter in labels else -1
+    if idx < 0 or idx >= len(choices):
+        return False
+
+    if normalize_text(text) != normalize_text(choices[idx]):
+        return False
+
+    return choices[idx] == ground_truth

@@ -1,12 +1,14 @@
 #!/usr/bin/env python3
 """Debug MOSS-Audio inference error."""
 import sys, os, traceback, warnings
+from pathlib import Path
 warnings.filterwarnings("ignore")
 os.environ["HF_DATASETS_OFFLINE"] = "1"
 os.environ["HF_HUB_OFFLINE"] = "1"
 
-sys.path.insert(0, "/home/lt/projects/audioQAagent")
-sys.path.insert(0, "/home/lt/projects/audioQAagent/third_party")
+_PROJ_ROOT = str(Path(__file__).resolve().parent.parent)
+sys.path.insert(0, _PROJ_ROOT)
+sys.path.insert(0, str(Path(_PROJ_ROOT) / "third_party"))
 
 import torch
 import numpy as np

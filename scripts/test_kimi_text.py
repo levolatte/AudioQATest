@@ -5,9 +5,10 @@ This script tests the low-level KimiAudio API directly (not the adapter).
 For adapter testing, use test_kimi_adapter.py.
 """
 import sys, types, importlib, os
+from pathlib import Path
 os.environ['TOKENIZERS_PARALLELISM'] = 'false'
 
-sys.path.insert(0, '/home/lt/projects/audioQAagent/third_party/Kimi-Audio')
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "third_party" / "Kimi-Audio"))
 from kimia_infer.flash_attn_mock import *
 
 def make_mock(name):

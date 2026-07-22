@@ -4,7 +4,7 @@ hf_dataset: "BoJack/MMAR"
 split: "test"
 max_samples: null
 audio_field: "audio_path"
-audio_root: null
+audio_root: "data/mmar/audio"
 category_fields:
   - "modality"
   - "category"

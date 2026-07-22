@@ -23,7 +23,7 @@ from src.models.utils import build_question_prompt, clean_answer
 
 # Path to third_party directory (parent of Kimi-Audio vendored code)
 _THIRD_PARTY = str(
-    Path(__file__).resolve().parent.parent.parent / "third_party"
+    Path(__file__).resolve().parent.parent.parent / "third_party" / "Kimi-Audio"
 )
 
 
@@ -76,7 +76,8 @@ class KimiAudioModel(AbstractModel):
     @staticmethod
     def _resolve_local_path(model_id: str) -> str:
         """Resolve a HF model ID to its local cache snapshot (offline)."""
-        cache_dir = os.path.expanduser("~/.cache/huggingface/hub")
+        hf_home = os.environ.get("HF_HOME", os.path.expanduser("~/.cache/huggingface"))
+        cache_dir = os.path.join(hf_home, "hub")
         repo_dir = model_id.replace("/", "--") if "/" in model_id else model_id
         # First try: symlink in snapshots/
         refs_dir = os.path.join(cache_dir, f"models--{repo_dir}", "refs")
@@ -112,6 +113,25 @@ class KimiAudioModel(AbstractModel):
                 audio_signal = self._tensor_to_tempfile(audio)
                 _cleanup_temp = True
 
+            # --- Validate audio path ----------------------------------------
+            # Convert pathlib.Path to str
+            if isinstance(audio_signal, Path):
+                audio_signal = str(audio_signal)
+
+            if audio_signal is None:
+                raise ValueError(
+                    "Kimi-Audio requires audio input (supports_text_only=False), got None"
+                )
+            if not isinstance(audio_signal, str):
+                raise TypeError(
+                    f"Kimi-Audio requires a file path (str) for audio, "
+                    f"got {type(audio_signal).__name__}"
+                )
+            if not os.path.exists(audio_signal):
+                raise FileNotFoundError(
+                    f"Kimi-Audio audio file not found: {audio_signal}"
+                )
+
             prompt = build_question_prompt(question, choices, label_only=label_only)
 
             # Build KimiAudio message format.
@@ -127,12 +147,11 @@ class KimiAudioModel(AbstractModel):
                 "message_type": "text",
                 "content": prompt,
             }]
-            if audio_signal is not None and isinstance(audio_signal, str) and os.path.exists(audio_signal):
-                messages.append({
-                    "role": "user",
-                    "message_type": "audio",
-                    "content": audio_signal,
-                })
+            messages.append({
+                "role": "user",
+                "message_type": "audio",
+                "content": audio_signal,
+            })
 
             max_new_tokens = self._generate_kwargs.get("max_new_tokens", 64)
 

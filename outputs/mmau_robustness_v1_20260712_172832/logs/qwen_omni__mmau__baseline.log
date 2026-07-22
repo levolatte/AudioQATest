@@ -1,3 +1,0 @@
-2026-07-12 17:29:17 | INFO     | === Task start: qwen_omni__mmau__baseline ===
-2026-07-12 17:29:17 | INFO     | Model: qwen_omni, Benchmark: mmau, Perturbation: baseline, Samples: 1000, Batch size: 12
-2026-07-12 17:29:17 | INFO     | Sorted 1000 samples by audio duration (range: 2.0s – 34.5s)

@@ -21,21 +21,33 @@ scripts/        — entry points: run_experiment.py, run_single.py, aggregate.py
 
 ## ⚠️ Critical warnings
 
-### ALWAYS use the `audioqa` conda environment
+### Conda environments
 
-This project **requires** the `audioqa` conda environment. All scripts, tests, and
-experiments MUST be run with it:
+This project uses **two** conda environments:
+
+| 模型 | Conda 环境 | 路径 |
+|------|-----------|------|
+| `kimi_audio` | `audioqakimi` | `/data-nfs/gpu1-0/um202574318/.conda/envs/audioqakimi/` |
+| 其他所有模型 | `audioqan` | `/data-nfs/gpu1-0/um202574318/.conda/envs/audioqan/` |
+
+**`kimi_audio` 必须使用 `audioqakimi`**，因为它依赖特定版本的 transformers 和 kimi-audio 定制代码，与其他模型的依赖版本冲突。
+
+#### `audioqan`（默认，适用于 qwen_omni / qwen2_audio / moss_audio / mock_model）
 
 ```bash
-conda activate audioqa
+conda activate audioqan
 python scripts/run_single.py ...    # ✅ correct
-python scripts/run_single.py ...    # ❌ wrong if audioqa not active
+python scripts/run_single.py ...    # ❌ wrong if audioqan not active
 ```
 
-The environment lives at `/home/lt/miniconda3/envs/audioqa/` and contains:
-- PyTorch 2.13+cu130, transformers 5.13, datasets 5.0, accelerate 1.14
-- `qwen_omni_utils`, `moss_audio_vendor` (vendored under `third_party/`)
-- All audio I/O libraries (soundfile, librosa, torchaudio)
+Contains: PyTorch 2.8.0+cu128, transformers 5.14.1, datasets 5.0, accelerate 1.14, flash_attn 2.8.3, plus all audio I/O libraries and vendored code.
+
+#### `audioqakimi`（仅 kimi_audio）
+
+```bash
+conda activate audioqakimi
+python scripts/run_single.py kimi_audio ...    # ✅ correct
+```
 
 **Never** run experiments from the base conda environment or any other env — missing
 dependencies or wrong versions will cause cryptic failures.

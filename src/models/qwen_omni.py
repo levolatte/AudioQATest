@@ -16,12 +16,6 @@ from src.core.registry import register_model
 from src.models.base import AbstractModel, ModelLoadError, ModelInferenceError
 from src.models.utils import build_question_prompt, clean_answer
 
-SYSTEM_PROMPT = (
-    "You are an audio understanding model that answers multiple choice questions "
-    "based on audio content."
-)
-
-
 @register_model("qwen_omni")
 class QwenOmniModel(AbstractModel):
     def __init__(self, config: dict = None):
@@ -106,7 +100,6 @@ class QwenOmniModel(AbstractModel):
         user_content.append({"type": "text", "text": prompt})
 
         messages = [
-            {"role": "system", "content": [{"type": "text", "text": SYSTEM_PROMPT}]},
             {"role": "user", "content": user_content},
         ]
         return messages, _cleanup_temp, audio_path_or_data

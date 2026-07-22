@@ -8,6 +8,7 @@ Uses vendored copy of MOSS-Audio source under third_party/moss_audio_vendor/
 to avoid 'src' namespace conflict with the project itself.
 """
 
+import logging
 import os
 import sys
 from pathlib import Path
@@ -18,6 +19,8 @@ import torch
 from src.core.registry import register_model
 from src.models.base import AbstractModel, ModelLoadError, ModelInferenceError
 from src.models.utils import build_question_prompt, clean_answer
+
+_logger = logging.getLogger(__name__)
 
 # Path to third_party directory (parent of moss_audio_vendor)
 _THIRD_PARTY = str(
@@ -189,9 +192,13 @@ class MOSSAudioModel(AbstractModel):
         for audio, question, choices, label_only in batch:
             try:
                 chosen, raw = self.infer(audio, question, choices, label_only=label_only)
-            except Exception:
+            except Exception as e:
+                _logger.error(
+                    "MOSS-Audio inference failed (question=%.100s...): %s",
+                    question, e
+                )
                 chosen = choices[0] if choices else ""
-                raw = "[ERROR]"
+                raw = f"[ERROR] {e!r}"
             results.append((chosen, raw))
         return results
 

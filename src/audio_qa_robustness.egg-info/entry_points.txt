@@ -1,4 +1,0 @@
-[console_scripts]
-aggregate = scripts.aggregate:main
-run-experiment = scripts.run_experiment:main
-run-single = scripts.run_single:main
